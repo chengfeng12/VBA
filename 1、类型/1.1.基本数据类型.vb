@@ -30,6 +30,11 @@ Sub DemoBasicTypes()
     d = 3.14159265358979
     c = 1234.5678
     str = "ATE 自动化"
+    ' ★ 字符串拼接一律用 &，别用 +：
+    '     "1" & 1   → "11"        "1" + 1    → 2（退化成加法）
+    '     Null & "a" → "a"        Null + "a" → Null（污染整个表达式）
+    '   & 两边必须留空格：s&i 会被当成"s 是 Long 型"（& 是 Long 的类型声明字符）
+    '   VBA 没有模板字符串，多段拼接只能手写 &，换行用 vbCrLf / vbTab
     flag = True
     dt = DateSerial(2026, 10, 22) + TimeSerial(9, 30, 0) ' 也可以用 #10/22/2026 9:30# 这种字面量
     Set obj = ThisWorkbook ' 对象必须用 Set 赋值
