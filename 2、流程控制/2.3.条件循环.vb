@@ -36,6 +36,17 @@ Sub DemoDoLoop()
     MsgBox "Do Until → k = " & k                      ' 3
     ' 记忆：While 是"成立就继续"，Until 是"成立就停"
 
+    ' ---- Until 的后测：先执行一次，再判断"是否该停了" ----
+    Dim j As Long
+    j = 100
+    Do
+        j = j + 1
+    Loop Until j >= 3
+    MsgBox "后测 Do Loop Until → j = " & j            ' 101
+    ' ★ 100 早就满足 j >= 3，但因为"先执行后判断"，还是会加一次
+    '   结论：判断位置看 Do 后面（前测）还是 Loop 后面（后测）；
+    '         判定方向看 While（成立就继续）/ Until（成立就停），两者互不影响
+
     ' ---- 死循环防护：外部条件不可控时必须加最大次数兜底 ----
     Dim retry As Long, ok As Boolean
     retry = 0

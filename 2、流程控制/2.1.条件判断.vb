@@ -40,6 +40,26 @@ Sub DemoIf()
     '   所以不能靠"前面挡住后面"：先判空再取值，必须拆成两层 If，不能靠 And 串起来
     '   （第 4 章判单元格/对象是否存在时尤其明显）
 
+    ' ---- Not：唯一的一元运算符，但它其实是"按位取反"，不是纯逻辑非 ----
+    Dim flag As Boolean
+    flag = (v > hi)                                ' 3.3 > 3.6 → False
+    If Not flag Then MsgBox "Not False = True"     ' 成立，走进来
+
+    MsgBox "Not True  = " & (Not True)             ' False
+    MsgBox "Not 0     = " & (Not 0)                ' -1   ← 不是 True
+    MsgBox "Not -1    = " & (Not -1)               ' 0
+    MsgBox "Not 5     = " & (Not 5)                ' -6   ← 按位取反，Not x = -x - 1
+    ' ★ VBA 里 True 的数值就是 -1，根源正是 Not 0 = -1；
+    '   JS 的 ! 只返回布尔值（!0 === true），VBA 的 Not 作用在整数上是逐位取反，
+    '   所以 Not 只用来取反"布尔标志/比较结果"，别拿它当 ! 用在数字上
+
+    ' ★ 优先级：比较运算符 > Not > And > Or，所以
+    '   If Not v > hi Then          ' 等于 Not (v > hi)，比较先算
+    '   而 JS 里 !v > hi 是 (!v) > hi —— 语义正好相反，跨语言时务必加括号
+
+    ' ★ 对象判空只能写成 Not 在前：If Not obj Is Nothing Then
+    '   VBA 没有 Is Not Nothing 这种写法（C# 才有）
+
     ' ---- 三元运算：VBA 没有 ?: ，用 IIf 函数 ----
     Dim result As String
     result = IIf(v >= lo And v <= hi, "Pass", "Fail")
@@ -52,6 +72,8 @@ Sub DemoIf()
     ' ---- Select Case：多分支比一长串 ElseIf 清楚 ----
     Dim code As String
     code = " pass "
+    ' UCase$ / Trim$ 名字后的 $ 是 String 类型声明字符：带 $ 的版本返回 String，
+    ' 不带 $ 的返回 Variant（更慢，且会把 Null 传下去污染整个表达式），详见 1.2
     Select Case UCase$(Trim$(code))            ' Select 后面只能跟一个表达式
         Case "PASS", "OK"                      ' 一个 Case 可以跟多个值，逗号分隔
             MsgBox "判定为合格"
@@ -61,6 +83,22 @@ Sub DemoIf()
             MsgBox "未知结果：[" & code & "]"
     End Select
 
+    ' ★ Case 不是"返回"，只是"候选值"的标签：Select Case 先算一次表达式，
+    '   再从上往下跟每个 Case 比，命中就执行那一支的语句，然后跳到 End Select。
+    '   VBA 没有 return，想让分支算出点什么带出去，就自己赋值：
+    '     Sub 里      → 赋值给外面已经声明好的变量（如下）
+    '     Function 里 → 赋值给函数名本身（见 3.1）
+    Dim grade As String
+    Select Case UCase$(Trim$(code))
+        Case "PASS", "OK"
+            grade = "合格"
+        Case "FAIL", "NG"
+            grade = "不合格"
+        Case Else
+            grade = "未知"
+    End Select
+    MsgBox "code = [" & code & "] → 判定：" & grade
+
     ' ---- Case 的三种写法 ----
     Dim n As Long
     n = 7
@@ -69,11 +107,15 @@ Sub DemoIf()
             MsgBox "1~5"
         Case 6, 8                              ' 枚举
             MsgBox "6 或 8"
-        Case Is > 10                           ' Is 后面只能跟 > >= < <= = <>
+        Case Is > 10                           ' Is 是占位符，读作"n Is > 10"，
+                                               ' 后面只能跟 > >= < <= = <>（见下）
             MsgBox "大于 10"
         Case Else
             MsgBox "其他：" & n
     End Select
     ' ★ 从上往下匹配，命中第一个就走 → 范围有重叠时，窄的（特殊的）写前面
     ' ★ 要同时判断两个变量（如 同时看电压和电流），Select Case 做不到，用 If
+    ' ★ 三类写法可以混写在同一个 Case 里，逗号分隔，任一项命中即执行：
+    '     Case 1, 3, 5 To 8, Is > 100
+    '   注意 To 必须左小右大，写反了（Case 5 To 1）不报错但永不命中
 End Sub
