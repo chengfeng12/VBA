@@ -34,7 +34,8 @@ VBA/
 │   ├── 1.3.Variant与常量.vb  Variant / VarType / Const / 类型转换
 │   ├── 1.4.数组.vb          固定、动态、二维数组与 Array/Split/Join/Filter
 │   ├── 1.5.作用域.vb        Dim / Static / Private 三者的生命周期
-│   └── 1.6.工具函数.vb       ToDouble、ToFixed 两个可复用函数
+│   ├── 1.6.工具函数.vb       ToDouble、ToFixed 两个可复用函数
+│   └── 1.7.浮点与数值比较.vb 容差比较、Round 银行家舍入、精度常识
 ├── 2、流程控制/             第 2 章：判断与循环
 │   ├── 0.目录.vb
 │   ├── 2.0.入口.vb          HelloControl，总入口
@@ -56,11 +57,19 @@ VBA/
 │   ├── 4.2.Sheet操作.vb     引用、遍历、增删、复制移动、隐藏、保护
 │   ├── 4.3.单元格与区域.vb  Range / Cells / Offset / Resize / End / UsedRange
 │   └── 4.4.表格ListObject.vb 超级表、结构化引用、增删行、筛选、排序、汇总
+├── 5、实战基础/             第 5 章：文本 / 字典 / COM（量产必备）
+│   ├── 0.目录.vb            本章导读 + 与 JS 的整体对照表
+│   ├── 5.0.入口.vb          HelloPractical，总入口
+│   ├── 5.1.字符串处理.vb    Trim / InStr / Mid / Split / Join / Replace / Like
+│   ├── 5.2.文本文件与CSV.vb Open / Line Input / Print # / Dir / UTF-8 读写
+│   ├── 5.3.Dictionary字典.vb CreateObject、Exists、映射与按 bin 统计
+│   ├── 5.4.COM与CreateObject.vb ProgID、Excel.Application、释放防泄漏
+│   └── 5.5.随机与模拟数据.vb Rnd / Randomize、造模拟数据、固定种子复现
 ├── CONTRIBUTING.md          Git 提交规范
 └── README.md                本文件
 ```
 
-章节顺序按依赖走：**类型 → 流程控制 → 过程与函数 → 对象**。对象放最后，是因为操作 `Range` 前得先会用循环遍历、用函数封装判定，否则一次要同时消化三个新概念。
+章节顺序按依赖走：**类型 → 流程控制 → 过程与函数 → 对象 → 实战基础**。对象放倒数第二，是因为操作 `Range` 前得先会用循环遍历、用函数封装判定；第 5 章放最后，是因为它把前四章的能力组合成"读文件 → 切字符串 → 查表统计 → 出结果"的完整链路。
 
 约定：目录名带序号，文件名 = 章节号 + 主题，`.vb` 后缀只是为了在编辑器里有高亮，实际是纯文本。
 
@@ -80,6 +89,7 @@ VBA/
 | `1.4.数组` | 一维/动态/二维、`ReDim Preserve`、`UBound/LBound`、`Array/Split/Join/Filter/Erase` | `Dim a(3)` 是 4 个元素；VBA 二维数组是矩形，不是数组套数组 |
 | `1.5.作用域` | 过程级 `Dim`、静态 `Static`、模块级 `Private` / `Public` | 连按 F5 观察 `temp` 恒为 1、`keep` 一直累加 |
 | `1.6.工具函数` | 按 `VarType` 分支的安全转换、`Err.Raise` 自定义错误、`Optional` 默认参数 | 脏数据抛错，绝不静默返回 0 |
+| `1.7.浮点与数值比较` | `0.1+0.2<>0.3`、容差比较、`Round`/`CInt` 银行家舍入、`Int` vs `Fix`、累加误差、`Currency` | 判限用 `Abs(实测-规格) <= 容差`；`Round(2.5)=2`，要四舍五入用 `WorksheetFunction.Round` |
 
 ### 第 2 章 流程控制（已完成）
 
@@ -110,6 +120,17 @@ VBA/
 | `4.2.Sheet操作` | 引用、遍历、增删、复制移动、隐藏、保护 | 遍历用 `For Each ws In ThisWorkbook.Worksheets` |
 | `4.3.单元格与区域` | `Range`/`Cells`/`Offset`/`Resize`/`End`/`UsedRange`、`Value` 与 `Value2`、批量读写 | `Cells(行, 列)` 与 `Range("C2")` 的行列顺序相反；批量读写走数组 |
 | `4.4.表格ListObject` | 超级表、结构化引用、增删行、筛选、排序、汇总 | `Find`/`AutoFilter` 会留下查找状态，记得复位 |
+
+### 第 5 章 实战基础（已完成）
+
+| 文件 | 主要知识点 | 关键结论 |
+|---|---|---|
+| `5.0.入口` | `HelloPractical` 总入口 | 只读写临时目录，不碰业务数据 |
+| `5.1.字符串处理` | `Trim`/`InStr`/`Mid`/`Left`/`Right`/`Split`/`Join`/`Replace`/`Like`、拼接性能 | `InStr` 找不到返回 0；`Split` 是 0 基；循环拼接改用数组 + `Join` |
+| `5.2.文本文件与CSV` | `Open`/`Line Input`/`Print #`/`FreeFile`/`EOF`、`Dir` 遍历、带引号 CSV 解析、`ADODB.Stream` 读写 UTF-8 | 原生 `Open` 是 ANSI，中文 UTF-8 必须走 `ADODB.Stream`；`Print #` 的逗号是制表位 |
+| `5.3.Dictionary字典` | `CreateObject`、`Exists`、`Keys`/`Items`、`CompareMode`、映射与计数 | 取值前必须 `Exists`，直接 `d(新键)` 会新建空条目 |
+| `5.4.COM与CreateObject` | 后期绑定、常用 ProgID、`Excel.Application`、释放与防泄漏 | 进程外对象要 `Quit` + `Set Nothing`，顺序反了留僵尸进程 |
+| `5.5.随机与模拟数据` | `Rnd`/`Randomize`、整数区间公式、标称±容差造数据、固定种子 | 不播种则每次同一条序列；`Rnd(0)` 不前进；正式量产结果不能用随机 |
 
 ---
 
@@ -231,8 +252,9 @@ docs(类型): 补充 VBA 无需 import 的说明
 
 ## 8. 后续规划
 
-1. 第 5 章「实战」：读 ATE 原始数据 → 判限 → 生成测试报告（合并前 4 章能力）
+1. 第 6 章「完整流程」：CSV 原始数据 → 判限（含容差）→ 良率统计 → 生成报告
 2. 第 3 章待补：类模块（`Class Module`）、`Property Let/Get/Set`、自定义对象
-3. 第 4 章待补：`Workbook` 的打开/另存/关闭、事件（`Worksheet_Change`、`Workbook_Open`）
-4. 抽一个公共模块 `Util.bas`，把 `ToDouble`、`ToFixed`、`LastRowOf`、`Judge` 收进去，避免各章重复定义触发「二义性名称」
-5. 全章示例统一往 ATE 场景靠：引脚电压、上下限判定、良率统计
+3. 第 4 章待补：`Workbook` 打开/另存/关闭、事件（`Worksheet_Change`、`Workbook_Open`）
+4. 抽一个公共模块 `Util.bas`，把 `ToDouble`、`ToFixed`、`LastRowOf`、`Judge`、`SplitCsvLine`、`ReadUtf8` 收进去，避免各章重复定义触发「二义性名称」
+5. 第 5 章待补：正则（`VBScript.RegExp`）、`FSO` 递归遍历目录、`ADODB` 连数据库
+6. 全章示例统一往 ATE 场景靠：引脚电压、上下限判定、良率统计

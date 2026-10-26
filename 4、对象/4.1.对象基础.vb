@@ -56,6 +56,32 @@ Sub DemoObjectBasics()
                "行：" & .Row & "，列：" & .Column
     End With
     ' With 块里以 . 开头的是 With 后面那个对象；不写 . 就是普通变量/过程
+    ' ★ 和 JS 的 with 不是一回事：JS 那个是把对象属性塞进作用域（严格模式禁用），
+    '   VBA 的 With 只是"省掉对象前缀"，块里照样能用全局变量和过程名
+
+    ' ---- 嵌套：内层的 . 指向最近的那一层 ----
+    With ws.Range("B2")
+        With .Font                                  ' .Font 属于 Range
+            .Bold = True                            ' 属于 Font
+            .Size = 10
+        End With
+        ' 出了内层，. 又回到 Range
+        MsgBox "外层还能用：" & .Address
+    End With
+
+    ' ---- 最常见的静默 bug：漏写一个点 ----
+    ' With ws
+    '     Cells(1, 1).Value = 1        ' ✗ 漏点 → 操作的是【当前活动表】，不是 ws
+    '     .Cells(1, 1).Value = 2       ' ✓ 带点才是 ws 上的单元格
+    ' End With
+    ' ★ 这类错误不报错，只是写错了表 —— 双表操作时特别难发现
+
+    ' ---- 什么时候值得用 ----
+    '   连续访问同一对象的 3 个以上成员时用，读起来清爽（尤其设置格式那种长链）；
+    '   对 Excel COM 还有实打实的性能收益：每写一次前缀都要重新解析对象，
+    '   With 只解析一次
+    ' ---- 什么时候别用 ----
+    '   块里只有一两行时没必要；块太长（几十行）反而看不出当前操作的是谁
 
     ' ---- 链式引用：能用但难维护 ----
     ' Application.Workbooks("book.xlsm").Worksheets("Sheet1").Range("A1").Value

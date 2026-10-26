@@ -18,4 +18,7 @@ Sub HelloVBA()
     ' DemoVariantAndConst  ' 1.3 Variant、常量、类型转换
     ' DemoArray            ' 1.4 数组
     ' DemoScope            ' 1.5 作用域
+    ' DemoFloat            ' 1.7 浮点比较与判限容差
+    ' DemoRound            ' 1.7 舍入：银行家 vs 四舍五入、Int vs Fix
+    ' DemoPrecision        ' 1.7 精度常识与累加误差
 End Sub

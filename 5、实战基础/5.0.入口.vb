@@ -1,0 +1,33 @@
+Option Explicit
+
+' ============================================================
+' 5.0 入口：本章总入口
+'     下面几行调用默认注释掉了，去掉注释即可依次运行
+'     也可以把光标放进任意一个 Sub 里按 F5 单独运行
+'     ★ 本章只读写临时目录（Environ("TEMP")），不会碰你的数据
+' ============================================================
+Sub HelloPractical()
+    MsgBox "第 5 章：实战基础 —— 文本 / 字典 / COM"
+
+    ' 本章各小节（每个 Sub 在独立模块里）
+    ' DemoString          ' 5.1 字符串处理基础
+    ' DemoConcat          ' 5.1 大量拼接用数组 + Join
+    ' DemoParseLog        ' 5.1 解析一条测试日志
+    ' DemoFreeFile        ' 5.2 文件号的取用与释放
+    ' DemoFileWrite       ' 5.2 写 CSV（造示例文件）
+    ' DemoFileRead        ' 5.2 逐行读文件
+    ' DemoParseCsv        ' 5.2 带引号的 CSV 解析
+    ' DemoListFiles       ' 5.2 遍历目录
+    ' DemoFileManage      ' 5.2 文件管理：Kill / FileCopy / Name / MkDir
+    ' DemoEnviron         ' 5.2 读环境变量（TEMP / USERNAME 等）
+    ' DemoDictBasics      ' 5.3 字典增删改查
+    ' DemoPinLimit        ' 5.3 引脚 → 限值映射
+    ' DemoCountByBin      ' 5.3 按 bin 统计
+    ' DemoDictTraps       ' 5.3 字典的坑
+    ' DemoComBasics       ' 5.4 CreateObject 基础
+    ' DemoComTraps        ' 5.4 COM 实战坑（说明为主）
+    ' DemoRndBasics       ' 5.5 Rnd / Randomize 基础
+    ' DemoMockData        ' 5.5 造 100 颗模拟数据算良率
+    ' DemoFixedSeed       ' 5.5 固定种子复现
+    ' DemoRndTraps        ' 5.5 Rnd 的反直觉行为
+End Sub

@@ -18,6 +18,8 @@ Option Explicit
 '                          Array、Split、Join、Filter、Erase
 '   1.5.作用域.vb          Dim / Static / Private 三种作用域的区别
 '   1.6.工具函数.vb        ToDouble —— 字符串安全转 Double
+'   1.7.浮点与数值比较.vb  0.1+0.2<>0.3、容差比较、Round 银行家舍入、
+'                          Int 与 Fix、精度常识
 ' ------------------------------------------------------------
 ' 先记住这几条
 '   1. Dim 不写 As 就是 Variant：最灵活也最慢，正式代码尽量写明类型
@@ -30,6 +32,9 @@ Option Explicit
 '      命名空间，Sub/Function 默认就是 Public，直接按名字互相调用；
 '      只有"模块没粘进工程"才会在编译期报「Sub 或 Function 未定义」。
 '      代价是重名即冲突（报"二义性名称"），所以过程名别用 Range/Date 这类内置名
+'   8. 两个 Double 永远别用 = 比：0.1+0.2 <> 0.3，判限要用 Abs(a-b) <= 容差
+'   9. Round / CInt 是银行家舍入（Round(2.5)=2），要四舍五入用
+'      Application.WorksheetFunction.Round
 ' ============================================================
 
 ' 本模块只放说明，没有可执行的 Sub
