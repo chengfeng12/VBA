@@ -114,3 +114,73 @@ Function Judge(ByVal v As Double, ByVal lo As Double, ByVal hi As Double) As Boo
     If v > hi Then Exit Function              ' ← return false
     Judge = True                              ' ← return true（先赋值）
 End Function                                   '   隐式返回，不需要再写 Exit Function
+
+
+' ============================================================
+' 附：本文件走一遍 —— 从调用到返回的完整执行流程
+'   阅读顺序（从上往下）≠ 执行顺序（从入口进去、跳出来、再跳进去）
+'   建议对照着按 F8 单步走一遍，比看注释快
+' ============================================================
+'
+' 【第 0 步】从哪儿开始
+'   光标放进 DemoJump 里按 F5，只执行这一个 Sub；
+'   其它 Sub / Function 不会自动跑，它们只在被调用时才进来。
+'   Sub 跑完就结束、没有返回值，Function 则要把值交回去（这就是两者的分界）。
+'
+' 【第 1 步】DemoJump 第 1 行：CheckPin 3.3
+'   ① 传值：3.3 是 Double 字面量
+'   ② 接受参数：CheckPin(ByVal v As Double) → ByVal 把 3.3 复制一份给 v，
+'      子过程里怎么改 v 都影响不到外面
+'   ③ 调用写法：不带 Call 就不能加括号（多参数时加括号会报"应为 ="，
+'      细节见 3.1）；写 Call CheckPin(3.3) 也完全正确
+'   ④ 进入 CheckPin 体内，从第一行往下执行
+'
+' 【第 2 步】CheckPin 里调 Judge(v, 3#, 3.6)
+'   ① 实参 v = 3.3；3# 是 Double 字面量（# 是类型声明字符，见 1.2）
+'   ② Judge 三个形参都是 ByVal，各自复制一份，互不干扰
+'   ③ Judge 体内逐句判断：
+'        v < lo ?   3.3 < 3     否
+'        v > hi ?   3.3 > 3.6   否
+'        Judge = True           ← 给函数名赋值 = 设定返回值
+'        走到 End Function      → 把 True 交回调用处
+'   ④ 回到 CheckPin：If Not True Then → False，条件不成立，跳过 Exit Sub
+'   ⑤ 打印"合格" → End Sub → 返回 DemoJump
+'
+' 【第 3 步】DemoJump 第 2 行：CheckPin 4.2
+'   ① 同样 ByVal，v = 4.2
+'   ② Judge(4.2, 3#, 3.6)：v > hi 成立 → 执行 Exit Function
+'      ★ 这一刻 Judge 还是默认值 False（没走到 Judge = True），
+'        所以 Exit Function 直接返回 False —— 这就是"提前返回"，
+'        既不用也不能写 return False
+'   ③ 回到 CheckPin：Not False = True → 进入 If
+'   ④ MsgBox 报超限 → Exit Sub
+'      ★ 立刻结束整个 CheckPin，后面那句"合格"永远不会执行
+'   ⑤ 返回 DemoJump
+'
+' 【第 4 步】DemoJump 第 3 行：CleanupDemo
+'   ① On Error GoTo Cleanup 先"登记"出事跳哪儿，还没真跳
+'   ② 正常路径一路走到底，自然落到 Cleanup: 标签
+'      ★ 标签不拦流程，正常路径也会穿过去（效果等同 JS 的 finally）
+'   ③ 善后执行完 → End Sub
+'
+' 【第 5 步】回到 DemoJump，走到 End Sub，整段代码结束
+'
+' ------------------------------------------------------------
+' 同一个错误，三种提示方式（这是"错误提示"的关键）
+'   1) 没有任何 On Error
+'        → 错误沿调用栈往上冒；一路没人接，Excel 弹出"运行时错误 xxx"，
+'          点"调试"停在出错那一行，点"结束"终止全部代码
+'   2) On Error Resume Next
+'        → 不提示，跳过出错那句继续跑。最危险：表面"跑完了"，
+'          实际数据可能缺一大截（所以要立刻 On Error GoTo 0 关掉）
+'   3) On Error GoTo 标签
+'        → 跳到标签，自己弹 MsgBox、写日志、恢复设置，再决定 Resume 还是退出
+'   本文件里：CheckPin / Judge 都没写处理器，所以出错会冒到 DemoJump；
+'   CleanupDemo 有处理器，中途出错不弹框，而是走 Cleanup 收尾。
+'
+' ------------------------------------------------------------
+' 一句话记住这条链
+'   DemoJump 调 CheckPin，CheckPin 调 Judge；
+'   Exit 只结束"自己这一个"过程，然后回到上一层继续；
+'   只有没人接的错误才会一路冒到最外面弹框。
+' ============================================================
