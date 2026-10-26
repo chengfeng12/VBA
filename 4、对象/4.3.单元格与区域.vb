@@ -60,6 +60,9 @@ Sub DemoRange()
     out(2, 1) = "GND": out(2, 2) = 0#:  out(2, 3) = "Pass"
     ' ws.Range("E1").Resize(2, 3).Value = out    ' ← 取消注释才会真的写入
     MsgBox "准备写入 2 行 3 列，左上角 E1，实际范围 " & ws.Range("E1").Resize(2, 3).Address
+    ' ★ 尺寸必须严丝合缝：2×3 的数组配 Resize(2, 3)，错一个就报"下标越界"或只写一部分
+    ' ★ 一维数组不能直接往纵向区域灌：VBA 按"行"理解，容易只填一格/横向铺开；
+    '   要竖着填就用二维数组 (1 To n, 1 To 1)，或套 WorksheetFunction.Transpose
 
     ' ---- 查找 ----
     ' Dim found As Range
@@ -70,6 +73,11 @@ Sub DemoRange()
     '     MsgBox "没找到"
     ' End If
     ' 注意：Find 会记住上次条件，复杂场景用 FindNext 循环，末尾记得重置
+    ' ★ 漏第一个的经典坑：Find 从 After 所指的"下一个"格子开始找，默认 After 是区域首格，
+    '   目标正好落在第一格时会绕一圈（表现成"没找到"或找到别处）→
+    '   显式传 After:=区域最后一格，才是真正的完整扫描
+    ' ★ 参数会"粘住"：这次传了 LookAt:=xlWhole，下次不写也仍是整格匹配；
+    '   FindNext 循环不会自动换参数，找不同条件前先重设一次
 
     ' ---- 复制 / 粘贴 / 清除 ----
     ' ws.Range("A1").Copy Destination:=ws.Range("D1")
@@ -85,6 +93,18 @@ Sub DemoRange()
     ' Intersect(ws.Range("A1:C3"), ws.Range("B2:D5"))   ' 交集 → B2:C3
     ' Union(ws.Range("A1"), ws.Range("C3"))             ' 并集
     ' ws.Range("A1").Comment.Text "备注"                 ' 加批注
+    ' ★ Intersect 没有交集时返回 Nothing，套 Not ... Is Nothing 判断再用
+
+    ' ---- 合并单元格：写入前先取 MergeArea ----
+    ' If ws.Range("A1").MergeCells Then
+    '     MsgBox "A1 属于合并区：" & ws.Range("A1").MergeArea.Address
+    ' End If
+    ' ★ 直接给合并区的非左上角写值，值会"消失"或不显示，先 .MergeArea 再写
+    ' ★ 合并区的 .Value 只有左上角有值，其余格读出来是 Empty
+
+    ' ---- 错误值：读之前先判 ----
+    ' If IsError(ws.Range("A1").Value) Then MsgBox "这格是 #N/A 之类的错误值"
+    ' ★ 不判就参与计算/比较，会直接把整个表达式变成一个错误值（和 JS 的 NaN 一样会传染）
 End Sub
 
 

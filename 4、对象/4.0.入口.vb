@@ -12,6 +12,7 @@ Sub HelloObjects()
     ' 本章各小节（每个 Sub 在独立模块里）
     ' DemoObjectBasics     ' 4.1 对象基础：Set / Nothing / With
     ' DemoSheets           ' 4.2 Sheet 操作
+    ' DemoFastMode         ' 4.2 提速三件套：ScreenUpdating / Calculation / EnableEvents
     ' DemoRange            ' 4.3 单元格与区域
     ' DemoTable            ' 4.4 表格（ListObject）
 End Sub

@@ -31,11 +31,32 @@ Sub DemoProcBasics()
     ' VBA 不会报错，直接返回该类型的默认值：
     '   Boolean → False，数值 → 0，String → ""，对象 → Nothing
     ' 这是最常见的静默 bug：条件写错了不报错，只是永远返回 False
+    '
+    ' ★ 函数名在过程内就是一个普通变量，所以递归里能左右同时出现：
+    '     Fact = n * Fact(n - 1)      ' 右边读旧值、左边写新值（见 3.4）
+    '   也正因为它是变量，"赋值"不等于"返回"，中间还能继续改
+
+    ' ---- 返回对象：必须用 Set，不能直接等号 ----
+    '   正确：Set GetSelf = ThisWorkbook
+    '   错误：GetSelf = ThisWorkbook     ' 想赋对象却走了默认属性，结果常常是 Nothing 或报错
+    '   JS 里 return obj 一行搞定，VBA 要记住"对象赋值一律 Set"（4.1 会再讲）
+    MsgBox "Set 返回对象：" & GetSelf().Name
+
+    ' ---- Function 也能当 Sub 用：单独一行调用，返回值直接丢掉 ----
+    JudgeVolt 3.3, 3#, 3.6                    ' 和 JS 里 fn() 不接收返回值一个意思
+    ' 但反过来不行：Sub 不能出现在表达式里（它没有值）
 
     ' ---- Public / Private ----
     ' 不写修饰符 = Public，别的模块直接按名字调用（见 1.6 关于"没有 import"的说明）
     ' 前加 Private = 只有本模块能调，适合纯内部工具
     MsgBox "内部工具：" & InternalTag()
+
+    ' ---- Static 修饰过程：里面所有局部变量自动变成 Static ----
+    '   写 Static Sub / Static Function，等于给过程内每个 Dim 都加了 Static，
+    '   省去逐个声明；代价是状态更难追踪，一般只给"工具函数"用
+    ' ---- 还有 Property 过程（Get / Let / Set）----
+    '   类模块 / 窗体模块里可以用 Property 把字段包成属性，
+    '   但标准模块里不允许写 Property，日常脚本用不到，先把 Function 用熟
 End Sub
 
 
@@ -76,6 +97,12 @@ Function FirstOverLimit(ByVal arr As Variant, ByVal hi As Double) As Long
         End If
     Next
     FirstOverLimit = -1
+End Function
+
+
+' 返回对象：Set 函数名 = 对象，少写 Set 就会踩坑
+Function GetSelf() As Object
+    Set GetSelf = ThisWorkbook
 End Function
 
 

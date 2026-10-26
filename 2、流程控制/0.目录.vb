@@ -17,7 +17,7 @@ Option Explicit
 '   2.1.条件判断.vb      If / ElseIf / Else、IIf、Select Case
 '                        比较运算符、And / Or / Not
 '   2.2.For循环.vb       For...Next、Step、嵌套、For Each、Exit For
-'   2.3.条件循环.vb      Do While / Do Until、前测与后测、While...Wend
+'   2.3.Do条件循环.vb      Do While / Do Until、前测与后测、While...Wend
 '   2.4.跳转与退出.vb    Exit Sub / Exit For / Exit Do、GoTo 标签、卫语句
 ' ------------------------------------------------------------
 ' 先记住这几条

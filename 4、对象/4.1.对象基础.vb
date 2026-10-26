@@ -36,6 +36,18 @@ Sub DemoObjectBasics()
     ' ws.Range("A1") = 3.3          ' ← 真写入，默认属性就是 Value
     ' MsgBox ws.Range("A1")         ' ← 读取时默认属性也是 Value
     ' 建议永远显式写 .Value，省得别人（和三个月后的自己）猜
+    ' ★ 默认属性在比较里更阴：If ws.Range("A1") = "" 读的是 .Value，
+    '   单元格里是错误值 #N/A 时整个 If 直接抛"类型不匹配"，先判 IsError
+
+    ' ---- 判断对象类型：TypeOf ... Is（≈ JS 的 instanceof）----
+    ' If TypeOf ws Is Worksheet Then MsgBox "确实是工作表"
+    ' MsgBox TypeName(ws)                      ' "Worksheet"，调试时比 Is 直观
+    ' ★ 只对对象有效；对 Nothing 用 TypeOf 返回 False，不会报错
+
+    ' ---- ★ Dim ... As New 的陷阱：Is Nothing 从此永远失效 ----
+    ' Dim col As New Collection      ' 这种声明会在"第一次用到"时自动 New 一个
+    ' MsgBox (col Is Nothing)        ' 永远 False —— 想靠 Is Nothing 判"还没建"会失效
+    ' 正确写法：Dim col As Collection : Set col = New Collection（需要时再 Set）
 
     ' ---- With：省掉重复的对象前缀 ----
     With ws.Range("B2")
@@ -56,4 +68,15 @@ Sub DemoObjectBasics()
     Set ws = Nothing
     ' 小脚本里不写也能跑（过程结束自动释放），但养成习惯：
     ' 循环里反复 Set 大对象时，不释放会有内存/句柄压力
+    ' ★ Set x = Nothing 只是"松开引用"，不等于关闭文件/程序；
+    '   要关工作簿得 wb.Close，要退出 Excel 得 Application.Quit
+
+    ' ---- 集合对象：Collection / Dictionary（属于"对象"，不是数组）----
+    ' Dim c As Collection : Set c = New Collection
+    ' c.Add 3.3, "VCC"                ' 值 + 可选键名
+    ' MsgBox c("VCC")                 ' 按键取，重复键会报错
+    '
+    ' Dictionary 需要"工具 → 引用"勾选 Microsoft Scripting Runtime（或后期绑定 CreateObject）
+    ' 好处：能用 Exists 判断键、能改值、能一次拿到 Keys/Items
+    ' ★ 什么时候用：结果"按名字/编号存"，且数量不定 —— 比二维数组 + 循环查找清楚得多
 End Sub

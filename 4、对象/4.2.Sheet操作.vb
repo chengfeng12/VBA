@@ -16,6 +16,13 @@ Sub DemoSheets()
     ' Set ws = wb.Sheets(1)                    ' 含图表工作表时也能取
 
     MsgBox "共 " & wb.Worksheets.Count & " 张表，第 1 张叫：" & wb.Worksheets(1).Name
+    ' ★ ThisWorkbook 是"代码所在的工作簿"；ActiveWorkbook 是"用户当前激活的那个"，
+    '   用户切一下窗口两者就不是一个文件了 —— 脚本里一律用 ThisWorkbook
+
+    ' ---- CodeName：用户改标签页名字也不会失效 ----
+    MsgBox "代号：" & ws.CodeName & "，显示名：" & ws.Name
+    ' 代码里写 Worksheets("Sheet1") 依赖显示名，用户一改名就崩；
+    ' 用对象代号（工程里直接写 Sheet1.Range(...)）或用 CodeName 反查，才稳
 
     ' ---- 遍历所有表 ----
     Dim names As String
@@ -45,6 +52,13 @@ Sub DemoSheets()
     ' Application.DisplayAlerts = False        ' 关掉"确认删除"弹窗
     ' wb.Worksheets("ATE_Report").Delete
     ' Application.DisplayAlerts = True         ' ★ 一定要恢复，否则后续操作都不提示
+    ' ★ 一次删多张别用 For Each：集合边遍历边删会跳表或报错，
+    '   倒序按下标删才安全：
+    '   Dim i As Long
+    '   For i = wb.Worksheets.Count To 1 Step -1
+    '       If 条件 Then wb.Worksheets(i).Delete
+    '   Next
+    ' ★ 唯一一张工作表删不掉，至少留一张可见表
 
     ' ---- 隐藏 ----
     ' ws.Visible = xlSheetHidden               ' 普通隐藏，用户可右键取消
@@ -72,6 +86,8 @@ End Sub
 ' 判断工作表是否存在
 '   用 On Error 是 VBA 里最省事的写法：取不到就说明不存在
 '   Optional 参数省掉时默认查 ThisWorkbook
+'   ★ 代价：任何原因取不到（名字含非法字符、工作簿结构被保护）都会算"不存在"
+'      —— 拿它做"要不要新建"的前置判断够用，别当权限校验
 ' ============================================================
 Function SheetExists(ByVal sheetName As String, Optional ByRef wb As Workbook) As Boolean
     Dim target As Workbook
@@ -91,3 +107,34 @@ Function SheetExists(ByVal sheetName As String, Optional ByRef wb As Workbook) A
     Set tmp = Nothing
     Set target = Nothing
 End Function
+
+
+' ============================================================
+' 提速三件套：ScreenUpdating / Calculation / EnableEvents
+'   目录里只写了"用完必须恢复"，这里给出完整写法：
+'   中途出错也要恢复 → 用 2.4 的 Cleanup 模式，恢复正常路径也会掉进去
+'   收益：批量写几万行时，不关这三项会慢十倍以上
+' ============================================================
+Sub DemoFastMode()
+    Dim prevCalc As XlCalculation
+    Dim prevEvents As Boolean
+
+    prevCalc = Application.Calculation            ' ★ 先存原状态，别假设一定是"自动"
+    prevEvents = Application.EnableEvents
+
+    On Error GoTo Cleanup
+    Application.ScreenUpdating = False            ' 屏幕不刷新
+    Application.Calculation = xlCalculationManual ' 公式不自动重算
+    Application.EnableEvents = False              ' 不触发 Worksheet_Change 等事件
+
+    ' ...这里放批量读写...
+    MsgBox "静默模式：屏幕不刷新、公式不重算、事件不触发"
+
+Cleanup:
+    On Error Resume Next                          ' 恢复过程本身不能再引发跳转
+    Application.ScreenUpdating = True
+    Application.Calculation = prevCalc            ' ★ 恢复原值，别硬写 xlCalculationAutomatic
+    Application.EnableEvents = prevEvents
+    ' ★ 忘了恢复的典型症状：界面一片灰不刷新、公式改了不重算、
+    '   连自定义按钮都失灵 —— 只能重启 Excel
+End Sub

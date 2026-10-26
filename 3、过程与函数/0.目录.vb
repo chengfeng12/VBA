@@ -13,9 +13,12 @@ Option Explicit
 ' 目录
 '   3.0.入口.vb            HelloProcedures —— 本章总入口
 '   3.1.Sub与Function.vb   Sub（无返回值）/ Function（有返回值）、
-'                          调用写法、Public 与 Private、提前 Exit
-'   3.2.参数传递.vb        ByRef（默认）/ ByVal、Optional 默认值、ParamArray
-'   3.3.错误处理.vb        On Error GoTo、Err 对象、Resume、Err.Raise
+'                          调用写法、Public 与 Private、提前 Exit、
+'                          Set 返回对象、Static Sub
+'   3.2.参数传递.vb        ByRef（默认）/ ByVal、括号 = 按值传、Optional
+'                          默认值、IsMissing、命名参数、ParamArray
+'   3.3.错误处理.vb        On Error GoTo、Err 对象、Resume、Err.Raise、
+'                          自定义错误号的捕获与分辨
 '   3.4.递归与实用模式.vb  递归、Static 记忆、返回数组、命名冲突
 ' ------------------------------------------------------------
 ' 先记住这几条
@@ -25,6 +28,8 @@ Option Explicit
 '   4. On Error GoTo 0 是"关闭错误处理"，不是"跳到第 0 行"
 '   5. Function 不写修饰符就是 Public，全工程可调用；重名会报"二义性名称"
 '   6. VBA 没有 import：模块粘进工程就能直接按名字调用（见 1.6 的说明）
+'   7. 给 ByRef 参数加括号（ClampRef (v)）等于按值传，过程里的修改静默丢失
+'   8. Function 返回对象必须 Set 函数名 = 对象；直接写等号会走默认属性
 ' ============================================================
 
 ' 本模块只放说明，没有可执行的 Sub

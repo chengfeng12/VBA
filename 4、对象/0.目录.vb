@@ -9,11 +9,14 @@ Option Explicit
 ' ------------------------------------------------------------
 ' 目录
 '   4.0.入口.vb              HelloObjects —— 本章总入口
-'   4.1.对象基础.vb          Set / Nothing / Is / With / 默认属性
-'   4.2.Sheet操作.vb         引用、遍历、增删、复制移动、隐藏、保护
+'   4.1.对象基础.vb          Set / Nothing / Is / With / 默认属性、
+'                            TypeOf、Dim As New 陷阱、Collection / Dictionary
+'   4.2.Sheet操作.vb         引用、遍历、增删、复制移动、隐藏、保护、
+'                            CodeName、提速三件套
 '   4.3.单元格与区域.vb      Range / Cells / Offset / Resize / End / UsedRange
-'                            Value 与 Value2、批量读写、最后一行
-'   4.4.表格ListObject.vb    超级表、结构化引用、增删行、筛选、排序、汇总
+'                            Value 与 Value2、批量读写、Find、合并单元格
+'   4.4.表格ListObject.vb    超级表、结构化引用、增删行、筛选、排序、汇总、
+'                            空表 DataBodyRange 陷阱
 ' ------------------------------------------------------------
 ' 对象模型（从上往下是父子关系）
 '
@@ -44,6 +47,9 @@ Option Explicit
 '   4. 批量读写一定走数组：arr = Range("A1:C100").Value，比逐格快几十倍
 '   5. 提速三件套：ScreenUpdating / Calculation / EnableEvents，用完必须恢复
 '   6. Find / AutoFilter 之类会改"查找状态"，记得复位，否则影响用户后续操作
+'   7. 超级表只有表头时 DataBodyRange 是 Nothing，读整表前必须先判
+'   8. Find 默认从区域首格的"下一个"开始找，要扫全区域得传 After:=最后一格
+'   9. Dim x As New 会让 x Is Nothing 永远为 False，要延迟建就写 Set x = New
 ' ============================================================
 
 ' 本模块只放说明，没有可执行的 Sub

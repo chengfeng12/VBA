@@ -44,6 +44,19 @@ Sub DemoTable()
     ' tbl.DataBodyRange    数据区（不含表头、不含汇总行）← 最常用
     ' tbl.TotalsRowRange   汇总行（前提是 ShowTotals = True）
 
+    ' ---- ★ 空表陷阱：只有表头、没有数据行时 DataBodyRange 是 Nothing ----
+    ' 直接 tbl.DataBodyRange.Value2 / .Rows.Count 会报"对象变量或 With 块变量未设置"
+    If tbl.DataBodyRange Is Nothing Then
+        MsgBox "这张表只有表头，还没有数据行"
+    Else
+        MsgBox "数据区：" & tbl.DataBodyRange.Address
+    End If
+    ' 每个"读整表"的地方都要先过这一道，CI 里用空模板跑一次就会踩到
+
+    ' ---- 列名 → 列号：筛选用 Field 时要靠它 ----
+    ' MsgBox "电压是第 " & tbl.ListColumns("电压").Index & " 列"
+    ' 列名写错会直接报"下标越界"，比 Range("B") 写死列号更难查
+
     ' ---- 增行 / 删行 ----
     ' Dim newRow As ListRow
     ' Set newRow = tbl.ListRows.Add                     ' 末尾追加一行
@@ -80,7 +93,8 @@ Sub DemoTable()
     ' 常用值：xlTotalsCalculationSum / Average / Count / Max / Min / StdDev
 
     ' ---- 转回普通区域 ----
-    ' tbl.Unlist
+    ' tbl.Unlist                     ' 只脱掉"表"的外壳，数据保留
+    ' tbl.Delete                     ' 连表带数据一起删 —— 两个完全不同的操作，别写混
     ' 注意：Unlist 之后结构化引用全部失效，代码里所有 tbl.xxx 都得改回 Range
 
     ' ---- 按表名找表（跨表操作时有用）----
