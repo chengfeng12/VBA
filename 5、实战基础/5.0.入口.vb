@@ -10,8 +10,17 @@ Sub HelloPractical()
     MsgBox "第 5 章：实战基础 —— 文本 / 字典 / COM"
 
     ' 本章各小节（每个 Sub 在独立模块里）
-    ' DemoString          ' 5.1 字符串处理基础
+    ' DemoTrim            ' 5.1 去空白：Trim 只认普通空格 / 全角空格 / Tab / BOM
+    ' DemoSearch          ' 5.1 查找比较：InStr / InStrRev / StrComp
+    ' DemoSlice           ' 5.1 截取：Left / Mid / Right / Mid 语句
+    ' DemoSplitJoin       ' 5.1 拆分合并：Split / Join / Filter
+    ' DemoReplace         ' 5.1 替换：起点 / 次数 / 忽略大小写
+    ' DemoCase            ' 5.1 大小写与全半角：UCase / LCase / StrConv
+    ' DemoCharCode        ' 5.1 字符码：Asc / Chr / StrReverse / String$
+    ' DemoLike            ' 5.1 模式匹配 Like
+    ' DemoNumberString    ' 5.1 数值 ↔ 字符串：CStr / Str / Val / Format
     ' DemoConcat          ' 5.1 大量拼接用数组 + Join
+    ' DemoRegex           ' 5.1 正则：VBScript.RegExp
     ' DemoParseLog        ' 5.1 解析一条测试日志
     ' DemoFreeFile        ' 5.2 文件号的取用与释放
     ' DemoFileWrite       ' 5.2 写 CSV（造示例文件）

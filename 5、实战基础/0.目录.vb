@@ -14,8 +14,10 @@ Option Explicit
 ' ------------------------------------------------------------
 ' 目录
 '   5.0.入口.vb               HelloPractical —— 本章总入口
-'   5.1.字符串处理.vb         Trim / InStr / Mid / Left / Right / Split /
-'                             Join / Replace / Like / 拼接性能
+'   5.1.字符串处理.vb         Trim / InStr / InStrRev / StrComp / Left / Mid /
+'                             Right / Split / Join / Filter / Replace / Like /
+'                             Asc / Chr / StrConv / Format / 正则 / 拼接性能
+'                             + StartsWith / EndsWith / PadLeft / TrimChars 等工具函数
 '   5.2.文本文件与CSV.vb      Open / Line Input / Print # / FreeFile / EOF /
 '                             Dir 遍历、带引号 CSV 解析、UTF-8 读写
 '   5.3.Dictionary字典.vb     CreateObject、Exists、Keys、计数与映射

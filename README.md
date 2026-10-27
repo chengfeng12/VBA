@@ -60,7 +60,8 @@ VBA/
 ├── 5、实战基础/             第 5 章：文本 / 字典 / COM（量产必备）
 │   ├── 0.目录.vb            本章导读 + 与 JS 的整体对照表
 │   ├── 5.0.入口.vb          HelloPractical，总入口
-│   ├── 5.1.字符串处理.vb    Trim / InStr / Mid / Split / Join / Replace / Like
+│   ├── 5.1.字符串处理.vb    Trim / InStr / InStrRev / StrComp / Mid / Split /
+│   │                        Join / Filter / Replace / Like / StrConv / 正则
 │   ├── 5.2.文本文件与CSV.vb Open / Line Input / Print # / Dir / UTF-8 读写
 │   ├── 5.3.Dictionary字典.vb CreateObject、Exists、映射与按 bin 统计
 │   ├── 5.4.COM与CreateObject.vb ProgID、Excel.Application、释放防泄漏
@@ -126,7 +127,7 @@ VBA/
 | 文件 | 主要知识点 | 关键结论 |
 |---|---|---|
 | `5.0.入口` | `HelloPractical` 总入口 | 只读写临时目录，不碰业务数据 |
-| `5.1.字符串处理` | `Trim`/`InStr`/`Mid`/`Left`/`Right`/`Split`/`Join`/`Replace`/`Like`、拼接性能 | `InStr` 找不到返回 0；`Split` 是 0 基；循环拼接改用数组 + `Join` |
+| `5.1.字符串处理` | `Trim`/`LTrim`/`RTrim`、`InStr`/`InStrRev`/`StrComp`、`Left`/`Mid`/`Right`/`Mid` 语句、`Split`（`limit`、多分隔符）/`Join`/`Filter`、`Replace`、`UCase`/`LCase`/`StrConv`、`Asc`/`Chr`、`Like`、`CStr`/`Str`/`Val`/`Format`、`VBScript.RegExp`、拼接性能 | `Trim` 只去普通空格，全角空格/Tab 要自己换；`InStr` 找不到返回 0、`Split` 是 0 基；`InStrRev` 参数顺序与 `InStr` 相反；`Left$` 越界返回空串；循环拼接改用数组 + `Join` |
 | `5.2.文本文件与CSV` | `Open`/`Line Input`/`Print #`/`FreeFile`/`EOF`、`Dir` 遍历、带引号 CSV 解析、`ADODB.Stream` 读写 UTF-8 | 原生 `Open` 是 ANSI，中文 UTF-8 必须走 `ADODB.Stream`；`Print #` 的逗号是制表位 |
 | `5.3.Dictionary字典` | `CreateObject`、`Exists`、`Keys`/`Items`、`CompareMode`、映射与计数 | 取值前必须 `Exists`，直接 `d(新键)` 会新建空条目 |
 | `5.4.COM与CreateObject` | 后期绑定、常用 ProgID、`Excel.Application`、释放与防泄漏 | 进程外对象要 `Quit` + `Set Nothing`，顺序反了留僵尸进程 |
@@ -255,6 +256,6 @@ docs(类型): 补充 VBA 无需 import 的说明
 1. 第 6 章「完整流程」：CSV 原始数据 → 判限（含容差）→ 良率统计 → 生成报告
 2. 第 3 章待补：类模块（`Class Module`）、`Property Let/Get/Set`、自定义对象
 3. 第 4 章待补：`Workbook` 打开/另存/关闭、事件（`Worksheet_Change`、`Workbook_Open`）
-4. 抽一个公共模块 `Util.bas`，把 `ToDouble`、`ToFixed`、`LastRowOf`、`Judge`、`SplitCsvLine`、`ReadUtf8` 收进去，避免各章重复定义触发「二义性名称」
-5. 第 5 章待补：正则（`VBScript.RegExp`）、`FSO` 递归遍历目录、`ADODB` 连数据库
+4. 抽一个公共模块 `Util.bas`，把 `ToDouble`、`ToFixed`、`LastRowOf`、`Judge`、`SplitCsvLine`、`ReadUtf8`，以及 5.1 末尾的 `StartsWith`/`EndsWith`/`PadLeft`/`PadRight`/`TrimChars`/`SplitAny` 收进去，避免各章重复定义触发「二义性名称」
+5. 第 5 章待补：`FSO` 递归遍历目录、`ADODB` 连数据库（正则已并入 5.1 的 `DemoRegex`）
 6. 全章示例统一往 ATE 场景靠：引脚电压、上下限判定、良率统计

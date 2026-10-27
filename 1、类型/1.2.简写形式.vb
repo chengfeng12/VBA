@@ -48,6 +48,8 @@ Sub DemoShortForm()
            "Trim$ → [" & Trim$(raw) & "]"
     ' 文本处理优先用 Trim$ / Left$ / Mid$ / Right$ / UCase$ / LCase$ / Chr$
     ' 好处：返回 String 而不是 Variant，更快，也不会把 Null 传染给整个表达式
+    ' 代价：参数是 Null 时直接报错 94；不带 $ 的版本则安静地返回 Null
+    '       （要容忍脏数据就先用 v & "" 兜底，见 5.1 开头「三条规则」）
 
     ' ---- 更老的写法：DefType 语句（了解即可，加了 Option Explicit 就失去意义）----
     ' DefInt A-Z        ' 写在模块顶部（过程外面）：A~Z 未声明的变量默认当 Integer
