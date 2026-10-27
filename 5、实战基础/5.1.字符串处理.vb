@@ -274,10 +274,12 @@ Sub DemoSplitJoin()
     MsgBox "含 VCC：" & Join(Filter(pins, "VCC"), ",")              ' VCC,VCC_3V3
     MsgBox "不含 VCC：" & Join(Filter(pins, "VCC", False), ",")     ' GND,CLK,RESET
     MsgBox "忽略大小写：" & Join(Filter(pins, "vcc", True, vbTextCompare), ",")
-    ' 签名：Filter(数组, 关键字 [, 是否保留匹配] [, 比较模式])
-    ' ★ 默认区分大小写；返回的数组永远 0 基
-    ' ★ 一个都没匹配上时返回空数组，直接 UBound 会报「下标越界 9」，
-    '   先 Join 出来看一眼，或自己写循环数个数
+    ' 签名：Filter(sourcearray, match [, include] [, compare])
+    '   include：True(默认)=保留匹配，False=保留不匹配
+    '   compare：vbBinaryCompare(0，默认) / vbTextCompare(1)
+    ' ★ 返回的数组永远 0 基
+    ' ★ 一个都没匹配上时返回空数组：LBound = 0、UBound = -1，
+    '   用 UBound(结果) < 0 判断没命中，别直接取元素
 
     ' ---- Join：数组拼回字符串 ----
     MsgBox "合回去：" & Join(pins, " | ")

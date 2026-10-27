@@ -32,7 +32,7 @@ VBA/
 │   ├── 1.1.基本数据类型.vb   9 种基础类型的范围与占用
 │   ├── 1.2.简写形式.vb      类型声明字符、字面量后缀、$ 版函数
 │   ├── 1.3.Variant与常量.vb  Variant / VarType / Const / 类型转换
-│   ├── 1.4.数组.vb          固定、动态、二维数组与 Array/Split/Join/Filter
+│   ├── 1.4.数组.vb          固定/动态/二维数组、ReDim/Preserve、LBound/UBound 与 Array/Split/Join/Filter
 │   ├── 1.5.作用域.vb        Dim / Static / Private 三者的生命周期
 │   ├── 1.6.工具函数.vb       ToDouble、ToFixed 两个可复用函数
 │   └── 1.7.浮点与数值比较.vb 容差比较、Round 银行家舍入、精度常识
@@ -87,7 +87,7 @@ VBA/
 | `1.1.基本数据类型` | `Byte` `Integer` `Long` `Single` `Double` `Currency` `String` `Boolean` `Date` `Object` | 循环计数器用 `Long`；金额用 `Currency`；`True = -1` |
 | `1.2.简写形式` | `% & ^ ! # @ $` 声明字符与字面量后缀、`:` 一行多语句、`Trim$` 类函数、`DefType` | `30000 * 2` 会溢出，写 `30000& * 2`；文本处理优先用 `$` 版 |
 | `1.3.Variant与常量` | 默认 `Variant`、`VarType` 返回值、`Const`、`CInt/CLng/CStr/CBool`、`IsNumeric` | 字符转浮点别用 `CDbl`，用 `Val` 或先校验再转 |
-| `1.4.数组` | 一维/动态/二维、`ReDim Preserve`、`UBound/LBound`、`Array/Split/Join/Filter/Erase` | `Dim a(3)` 是 4 个元素；VBA 二维数组是矩形，不是数组套数组 |
+| `1.4.数组` | 一维/动态/二维、`ReDim`/`ReDim Preserve`（扩容、缩容、只能改最后一维、O(n²) 扩容）、`UBound/LBound`、`Array/Split/Join/Filter/Erase`、常用操作（push/pop、查找、切片、合并、排序、条件过滤、`Transpose`） | `Dim a(3)` 是 4 个元素（个数 = `UBound - LBound + 1`）；`ReDim` 不带 `Preserve` 会清空数据；`Preserve` 只能改最后一维；VBA 数组没有 push/sort/slice，都要自己循环；逐次扩容是 O(n²) |
 | `1.5.作用域` | 过程级 `Dim`、静态 `Static`、模块级 `Private` / `Public` | 连按 F5 观察 `temp` 恒为 1、`keep` 一直累加 |
 | `1.6.工具函数` | 按 `VarType` 分支的安全转换、`Err.Raise` 自定义错误、`Optional` 默认参数 | 脏数据抛错，绝不静默返回 0 |
 | `1.7.浮点与数值比较` | `0.1+0.2<>0.3`、容差比较、`Round`/`CInt` 银行家舍入、`Int` vs `Fix`、累加误差、`Currency` | 判限用 `Abs(实测-规格) <= 容差`；`Round(2.5)=2`，要四舍五入用 `WorksheetFunction.Round` |

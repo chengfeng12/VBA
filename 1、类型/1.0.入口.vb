@@ -17,6 +17,9 @@ Sub HelloVBA()
     ' DemoShortForm        ' 1.2 简写形式（类型声明字符）
     ' DemoVariantAndConst  ' 1.3 Variant、常量、类型转换
     ' DemoArray            ' 1.4 数组
+    ' DemoReDim            ' 1.4 ReDim / ReDim Preserve、二维限制、扩容性能
+    ' DemoBounds           ' 1.4 LBound / UBound、元素个数、维号
+    ' DemoArrayOps         ' 1.4 常用操作：push/pop、查找、切片、排序、Transpose
     ' DemoScope            ' 1.5 作用域
     ' DemoFloat            ' 1.7 浮点比较与判限容差
     ' DemoRound            ' 1.7 舍入：银行家 vs 四舍五入、Int vs Fix
