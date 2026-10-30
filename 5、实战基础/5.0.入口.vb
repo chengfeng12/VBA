@@ -29,7 +29,9 @@ Sub HelloPractical()
     ' DemoListFiles       ' 5.2 遍历目录
     ' DemoFileManage      ' 5.2 文件管理：Kill / FileCopy / Name / MkDir
     ' DemoEnviron         ' 5.2 读环境变量（TEMP / USERNAME 等）
+    ' DemoDictBinding     ' 5.3 早期绑定 vs 后期绑定（Dim d As Dictionary）
     ' DemoDictBasics      ' 5.3 字典增删改查
+    ' DemoDictChangeKey   ' 5.3 修改键：d.Key(旧)=新、批量规范化
     ' DemoPinLimit        ' 5.3 引脚 → 限值映射
     ' DemoCountByBin      ' 5.3 按 bin 统计
     ' DemoDictTraps       ' 5.3 字典的坑

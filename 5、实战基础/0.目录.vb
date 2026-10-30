@@ -20,7 +20,8 @@ Option Explicit
 '                             + StartsWith / EndsWith / PadLeft / TrimChars 等工具函数
 '   5.2.文本文件与CSV.vb      Open / Line Input / Print # / FreeFile / EOF /
 '                             Dir 遍历、带引号 CSV 解析、UTF-8 读写
-'   5.3.Dictionary字典.vb     CreateObject、Exists、Keys、计数与映射
+'   5.3.Dictionary字典.vb     早期/后期绑定、CreateObject、Add/Exists/Keys、
+'                             改键（Key 属性）、计数与映射
 '   5.4.COM与CreateObject.vb  后期绑定、常用 ProgID、Excel.Application、
 '                             释放与防泄漏
 '   5.5.随机与模拟数据.vb     Rnd / Randomize、整数区间、标称±容差造数据、
